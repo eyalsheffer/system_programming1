@@ -3,10 +3,10 @@ CXX = g++
 CXXFLAGS = -Wall -std=c++11
 
 # Source files
-SRCS = main.cpp Graph.cpp Algorithms.cpp PriorityQueue.cpp UnionFind.cpp Node.cpp Stack.cpp
+SRCS = main.cpp Graph.cpp Algorithms.cpp PriorityQueue.cpp UnionFind.cpp Node.cpp Stack.cpp Edge.cpp
 
 # Header files
-HEADERS = Graph.hpp Algorithms.hpp PriorityQueue.hpp UnionFind.hpp Node.hpp Stack.hpp
+HEADERS = Graph.hpp Algorithms.hpp PriorityQueue.hpp UnionFind.hpp Node.hpp Stack.hpp Edge.hpp
 
 # Output executable
 TARGET = main

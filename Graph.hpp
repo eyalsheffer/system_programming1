@@ -1,22 +1,25 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include <iostream>
+#include "Edge.hpp"
+
 namespace graph {
 
     class Graph {
     private:
         // Defining the Edge structure inside Graph
-        struct Edge {
-            int end;
-            int weight;
-            Edge* next;  // Pointer to the next edge in the adjacency list
+        // struct Edge {
+        //     int end;        // End node of the edge
+        //     int weight;     // Weight of the edge
+        //     Edge* next;     // Pointer to the next edge in the adjacency list
 
-            // Default constructor for creating an edge with default values
-            Edge() : end(-1), weight(0), next(nullptr) {}
+        //     // Default constructor for creating an edge with default values
+        //     Edge() : end(-1), weight(0), next(nullptr) {}
 
-            // Parameterized constructor for creating an edge
-            Edge(int e, int w) : end(e), weight(w), next(nullptr) {}
-        };
+        //     // Parameterized constructor for creating an edge
+        //     Edge(int e, int w) : end(e), weight(w), next(nullptr) {}
+        // };
 
         Edge** adjacencyList;  // Array of adjacency list heads (raw pointers to Edge)
         int vertexCount;       // Number of vertices in the graph
@@ -25,6 +28,7 @@ namespace graph {
     public:
         // Constructor
         Graph(int vertexCount);
+        Graph(int vertexCount, int edgeCounter);
 
         // Destructor
         ~Graph();
@@ -45,7 +49,10 @@ namespace graph {
         int getEdgeCount() const;
 
         // Retrieves all edges of the graph (used in Kruskal's algorithm)
-        Edge* getEdges() const;
+        Edge** getEdges() const;
+
+        // Prints the graph (all edges with weights)
+        void printGraph() const;
     };
 
 } // namespace graph

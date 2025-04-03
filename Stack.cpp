@@ -29,3 +29,6 @@ int Stack::pop() {
     }
     return data[top--];
 }
+int Stack::returnTop(){
+    return data[top];
+}

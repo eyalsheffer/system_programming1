@@ -17,11 +17,11 @@ namespace graph {
         ~Algorithms();
 
         // Graph Algorithms
-        Graph bfs(Graph g, int start);
-        Graph dfs(Graph g, int start);
-        Graph dijkstra(Graph g, int start);
-        Graph prim(Graph g, int start);
-        Graph kruskal(Graph g, int start);
+        Graph bfs(Graph& g, int start);
+        Graph dfs(Graph& g, int start);
+        Graph dijkstra(Graph& g, int start);
+        Graph prim(Graph& g, int start);
+        Graph kruskal(Graph& g, int start);
     };
 
 } // namespace graph

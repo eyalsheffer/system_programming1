@@ -14,6 +14,7 @@ public:
     bool isEmpty();
     void push(int value);
     int pop();
+    int returnTop();
 };
 
 #endif
