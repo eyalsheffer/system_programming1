@@ -51,6 +51,8 @@ namespace graph {
         // Retrieves all edges of the graph (used in Kruskal's algorithm)
         Edge** getEdges() const;
 
+        int* getAdjacentVertices(int node) const;
+
         // Prints the graph (all edges with weights)
         void printGraph() const;
     };

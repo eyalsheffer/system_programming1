@@ -43,42 +43,14 @@ int main() {
 
     // Test Prim's Algorithm (Minimum Spanning Tree)
     std::cout << "\nRunning Prim's algorithm from node 0:" << std::endl;
-    graph::Graph primResult = algorithms.prim(g, 0);
+    graph::Graph primResult = algorithms.prim(g);
     primResult.printGraph();
 
     // Test Kruskal's Algorithm (Minimum Spanning Tree)
     std::cout << "\nRunning Kruskal's algorithm:" << std::endl;
-    graph::Graph kruskalResult = algorithms.kruskal(g, 0);
+    graph::Graph kruskalResult = algorithms.kruskal(g);
     kruskalResult.printGraph();
 
-    // Test Priority Queue
-    /*std::cout << "\nTesting Priority Queue:" << std::endl;
-    PriorityQueue pq = PriorityQueue(10);
-    pq.push(10, 1);
-    pq.push(20, 2);
-    pq.push(5, 3);
-    std::cout << "Top element: " << pq.top() << std::endl;
-    pq.pop();
-    std::cout << "Top element after pop: " << pq.top() << std::endl;
-
-    // Test UnionFind (Disjoint Set)
-    std::cout << "\nTesting UnionFind:" << std::endl;
-    UnionFind uf(6);
-    uf.unionSets(0, 1);
-    uf.unionSets(2, 3);
-    uf.unionSets(4, 5);
-    std::cout << "Is 0 and 1 connected? " << (uf.find(0) == uf.find(1) ? "Yes" : "No") << std::endl;
-    std::cout << "Is 0 and 2 connected? " << (uf.find(0) == uf.find(2) ? "Yes" : "No") << std::endl;
     
-    // Test Stack
-    std::cout << "\nTesting Stack:" << std::endl;
-    Stack stack(5);
-    stack.push(10);
-    stack.push(20);
-    stack.push(30);
-    std::cout << "Top of stack: " << stack.returnTop() << std::endl;
-    stack.pop();
-    std::cout << "Top of stack after pop: " << stack.returnTop() << std::endl;*/
-
     return 0;
 }

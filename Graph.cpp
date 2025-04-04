@@ -75,9 +75,16 @@ namespace graph {
     int* Graph::getNeighbors(int node, int& neighborCount) const {
         if (node >= vertexCount || node < 0) {
             std::cerr << "Invalid node index!" << std::endl;
+            neighborCount = 0;  // Make sure neighborCount is set to 0 on error
             return nullptr;
         }
-
+    
+        // Check if the adjacency list for the node is valid
+        if (adjacencyList[node] == nullptr) {
+            neighborCount = 0;  // No neighbors if the list is empty
+            return nullptr;
+        }
+    
         // Count the number of neighbors
         neighborCount = 0;
         Edge* current = adjacencyList[node];
@@ -85,16 +92,23 @@ namespace graph {
             ++neighborCount;
             current = current->getNext();
         }
-
+    
         // Allocate space for the neighbors
         int* neighbors = new int[neighborCount];
+        if (neighbors == nullptr) {
+            std::cerr << "Memory allocation failed for neighbors array!" << std::endl;
+            neighborCount = 0;  // Ensure neighborCount is set to 0 on failure
+            return nullptr;
+        }
+    
+        // Fill the neighbors array with the neighbor node indices
         current = adjacencyList[node];
         int idx = 0;
         while (current != nullptr) {
-            neighbors[idx++] = current->getEnd();
+            neighbors[idx++] = current->getEnd();  // Get the destination of the edge
             current = current->getNext();
         }
-
+    
         return neighbors;
     }
 
@@ -135,7 +149,32 @@ namespace graph {
     
         return edges;
     }
+    int* Graph::getAdjacentVertices(int node) const {
 
+        Edge* current = adjacencyList[node];
+
+        int* adj_array = new int[vertexCount];  // Dynamically allocate an array
+
+        int index = 0;
+
+
+
+        // Traverse the adjacency list for the vertex
+
+        while (current != nullptr) {
+
+            adj_array[index++] = current->getEnd();
+
+            current = current->getNext();
+
+        }
+
+
+
+        adj_array[index] = -1;  // Mark the end of the array
+
+        return adj_array;  // Return the array of adjacent verti
+    }
     // Prints the graph (all edges with weights)
     void Graph::printGraph() const {
         for (int i = 0; i < vertexCount; ++i) {

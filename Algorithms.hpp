@@ -20,8 +20,8 @@ namespace graph {
         Graph bfs(Graph& g, int start);
         Graph dfs(Graph& g, int start);
         Graph dijkstra(Graph& g, int start);
-        Graph prim(Graph& g, int start);
-        Graph kruskal(Graph& g, int start);
+        Graph prim(Graph& g);
+        Graph kruskal(Graph& g);
     };
 
 } // namespace graph
