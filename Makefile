@@ -30,5 +30,5 @@ clean:
 	rm -f $(OBJS) $(TARGET)
 
 # Run the program (for convenience)
-run: $(TARGET)
+Main: $(TARGET)
 	./$(TARGET)
