@@ -1,3 +1,4 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "Graph.hpp"
 #include "Edge.hpp"
 
@@ -16,7 +17,7 @@ namespace graph {
         adjacencyList = new Edge*[vertexCount];
         for (int i = 0; i < vertexCount; ++i) {
             adjacencyList[i] = nullptr;
-        }
+        }//hu
     }
 
     // Destructor: Cleans up the dynamically allocated memory
@@ -48,8 +49,11 @@ namespace graph {
         Edge* reverseEdge = new Edge(end, start, weight);  // Reverse edge with swapped start and end
         reverseEdge->setNext(adjacencyList[end]);
         adjacencyList[end] = reverseEdge;
-    
+        
+
         ++edgeCount;
+        // delete[] forwardEdge;
+        // delete[] reverseEdge;
     }
 
     // Retrieves the weight of an edge between two nodes
