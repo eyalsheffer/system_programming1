@@ -34,13 +34,59 @@ namespace graph {
             std::cerr << "Invalid node index!" << std::endl;
             return;
         }
+    
+        Edge* current = adjacencyList[start];
+        while (current != nullptr) {
+            if (current->getEnd() == end) {
+                std::cerr << "Edge already exists!" << std::endl;
+                return;
+            }
+            current = current->getNext();
+        }
+    
         Edge* forwardEdge = new Edge(start, end, weight);
         forwardEdge->setNext(adjacencyList[start]);
         adjacencyList[start] = forwardEdge;
+    
+        current = adjacencyList[end];
+        while (current != nullptr) {
+            if (current->getEnd() == start) {
+                std::cerr << "Edge already exists!" << std::endl;
+                delete forwardEdge; // משחרר את הזיכרון אם הקשת קיימת
+                return;
+            }
+            current = current->getNext();
+        }
+    
         Edge* reverseEdge = new Edge(end, start, weight);
         reverseEdge->setNext(adjacencyList[end]);
         adjacencyList[end] = reverseEdge;
+    
         ++edgeCount;
+    }
+    void Graph::addDirectedEdge(int start, int end, int weight) {
+    // Check for invalid node indices
+    if (start >= vertexCount || end >= vertexCount || start < 0 || end < 0) {
+        std::cerr << "Invalid node index!" << std::endl;
+        return;
+    }
+
+    // Check if the edge already exists in the forward direction
+    Edge* current = adjacencyList[start];
+    while (current != nullptr) {
+        if (current->getEnd() == end) {
+            std::cerr << "Edge already exists!" << std::endl;
+            return;
+        }
+        current = current->getNext();
+    }
+
+    // Add a directed edge from start to end
+    Edge* forwardEdge = new Edge(start, end, weight);
+    forwardEdge->setNext(adjacencyList[start]);
+    adjacencyList[start] = forwardEdge;
+
+    ++edgeCount;
     }
 
     int Graph::getWeight(int start, int end) const {
@@ -74,7 +120,6 @@ namespace graph {
             ++neighborCount;
             current = current->getNext();
         }
-    
         int* neighbors = new int[neighborCount];
         if (neighbors == nullptr) {
             std::cerr << "Memory allocation failed for neighbors array" << std::endl;
@@ -85,7 +130,10 @@ namespace graph {
         current = adjacencyList[node];
         int idx = 0;
         while (current != nullptr) {
-            neighbors[idx++] = current->getEnd();
+            if(current->getStart() == node)
+                neighbors[idx++] = current->getEnd();
+            else
+                neighbors[idx++] = current->getStart();
             current = current->getNext();
         }
         return neighbors;
@@ -93,6 +141,23 @@ namespace graph {
     int Graph::getVertexCount() const{
         return vertexCount;
     }
+    int Graph:: getEdgeCount() const{
+        return edgeCount;
+    }
+    Edge** Graph:: getEdges() const{
+        Edge** edges = new Edge*[edgeCount];
+        int index = 0;
+        for (int i = 0; i < vertexCount; ++i) {
+            Edge* current = adjacencyList[i];
+            while (current != nullptr) {
+                edges[index++] = current;
+                current = current->getNext();
+            }
+        }
+
+        return edges;
+    }
+    
     int* Graph::getAdjacentVertices(int node) const {
         Edge* current = adjacencyList[node];
 

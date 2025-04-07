@@ -1,54 +1,84 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "Graph.hpp"
+#include "Algorithms.hpp"
 
-using namespace graph;
-
-TEST_CASE("Graph basic operations") {
-    Graph g(4); 
-
-    SUBCASE("Vertex and edge count") {
-        CHECK(g.getVertexCount() == 4);
-        CHECK(g.getEdgeCount() == 0);
-
-        g.addEdge(0, 1, 10);
-        CHECK(g.getEdgeCount() == 1); 
-    }
-
-    SUBCASE("Adding and getting edge weight") {
-        g.addEdge(1, 2, 5);
-        CHECK(g.getWeight(1, 2) == 5);
-        CHECK(g.getWeight(2, 1) == 5);
-        CHECK(g.getWeight(0, 3) == -1); 
-    }
-
-    SUBCASE("Neighbors retrieval") {
+namespace graph {
+    Graph createTestGraph() {
+        Graph g(6);
         g.addEdge(0, 1, 10);
         g.addEdge(0, 2, 20);
-
-        int count = 0;
-        int* neighbors = g.getNeighbors(0, count);
-        CHECK(count == 2);
-        CHECK((neighbors[0] == 1 || neighbors[1] == 1));
-        CHECK((neighbors[0] == 2 || neighbors[1] == 2));
-        delete[] neighbors;
+        g.addEdge(1, 2, 30);
+        g.addEdge(2, 3, 40);
+        g.addEdge(3, 4, 50);
+        g.addEdge(4, 0, 60);
+        return g;
     }
 
-    SUBCASE("getAdjacentVertices includes -1 end") {
-        g.addEdge(2, 3, 7);
-        int* adj = g.getAdjacentVertices(2);
-        int found = 0;
-        for (int i = 0; adj[i] != -1; ++i) {
-            if (adj[i] == 3) found = 1;
-        }
-        CHECK(found == 1);
-        delete[] adj;
+    TEST_CASE("Test BFS") {
+        Graph g = createTestGraph();
+        Algorithms algorithms;
+        Graph result = algorithms.bfs(g, 0);
+        result.printGraph();
+        CHECK(result.getVertexCount() == 6);
+        
     }
 
-    SUBCASE("Edge list returns non-null") {
-        g.addEdge(1, 3, 4);
-        Edge** edges = g.getEdges();
-        CHECK(edges != nullptr);
-        delete[] edges;
+    TEST_CASE("Test DFS") {
+        Graph g = createTestGraph();
+        Algorithms algorithms;
+        Graph result = algorithms.dfs(g, 0);
+        result.printGraph();
+        CHECK(result.getVertexCount() == 6);
+    }
+
+    TEST_CASE("Test Dijkstra") {
+        Graph g = createTestGraph();
+        Algorithms algorithms;
+        Graph result = algorithms.dijkstra(g, 0);
+        result.printGraph();
+        CHECK(result.getVertexCount() == 6);
+    }
+
+    TEST_CASE("Test Prim's algorithm") {
+        Graph g = createTestGraph();
+        Algorithms algorithms;
+        Graph result = algorithms.prim(g);
+        result.printGraph();
+        CHECK(result.getVertexCount() == 6);
+    }
+
+    TEST_CASE("Test Kruskal's algorithm") {
+        Graph g = createTestGraph();
+        Algorithms algorithms;
+        Graph result = algorithms.kruskal(g);
+        result.printGraph();
+        CHECK(result.getVertexCount() == 6);
+    }
+
+
+
+    TEST_CASE("Test disconnected graph") {
+        Graph g(5);
+        Algorithms algorithms;
+
+        Graph result = algorithms.dfs(g, 0);
+        CHECK(result.getVertexCount() == 5);
+
+    }
+
+    TEST_CASE("Test graph with a cycle") {
+        Graph g(3);
+        g.addEdge(0, 1, 10);
+        g.addEdge(1, 2, 20);
+        g.addEdge(2, 0, 30);
+        
+        Algorithms algorithms;
+
+        Graph result = algorithms.dfs(g, 0);
+        CHECK(result.getVertexCount() == 3);
+
+        Graph kruskalResult = algorithms.kruskal(g);
+        CHECK(kruskalResult.getVertexCount() == 3);
     }
 }

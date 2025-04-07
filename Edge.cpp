@@ -26,7 +26,8 @@ Edge& Edge::operator=(const Edge& other) {
 }
 
 Edge::~Edge() {
-    delete next; 
+    //delete next; 
+    next = nullptr;
 }
 
 int Edge::getStart() const {

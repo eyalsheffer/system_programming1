@@ -20,6 +20,7 @@ namespace graph {
         ~Graph();
 
         void addEdge(int start, int end, int weight);
+        void addDirectedEdge(int start, int end, int weight) ;
         int getWeight(int start, int end) const;
         int* getNeighbors(int node, int& neighborCount) const;
         int getVertexCount() const;

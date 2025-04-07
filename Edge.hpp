@@ -10,7 +10,7 @@ private:
 
 public:
     Edge();
-    explicit Edge(int s, int e, int w); 
+    Edge(int s, int e, int w); //
     Edge(const Edge& other);
 
     Edge& operator=(const Edge& other);

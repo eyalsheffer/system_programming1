@@ -9,52 +9,62 @@ namespace graph {
     const int INF = 1000000;  
     Algorithms::Algorithms() {}
     Algorithms::~Algorithms() {}
+
     Graph Algorithms::bfs(Graph& g, int start) {
-        int vertexCount = g.getVertexCount();
-        if (vertexCount == 0) {
+        int vertixCount = g.getVertexCount();
+
+        if (vertixCount == 0) {
             throw std::invalid_argument("Graph has no vertices.");
         }
     
-        if (start < 0 || start >= vertexCount) {
+        if (start < 0 || start >= vertixCount) {
             throw std::out_of_range("Invalid start vertex.");
         }
-        bool* visited = new bool[vertexCount]{false};
-        int* queue = new int[vertexCount];
-        int front = 0, rear = 0;
-        Graph bfsGraph(vertexCount);
+    
+        bool* visited = new bool[vertixCount]{false};  
+        int* parent = new int[vertixCount]{-1};       
+        int* queue = new int[vertixCount];            
+        int front = 0, rear = 0;                    
+        Graph bfsGraph(vertixCount);                   
+    
         queue[rear++] = start;
         visited[start] = true;
-        
+    
         while (front < rear) {
-            int node = queue[front++];
-            std::cout << "Visiting node: " << node << std::endl;
-            
+            int current = queue[front++];  
+    
             int neighborCount = 0;
-            int* neighbors = g.getNeighbors(node, neighborCount); 
-            
+            int* neighbors = g.getNeighbors(current, neighborCount);  
+    
             if (neighbors == nullptr) {
-                std::cerr << "Error: Neighbors are null for node " << node << std::endl;
+                std::cerr << "Error: Neighbors are null for node " << current << std::endl;
                 break;
             }
+    
             for (int i = 0; i < neighborCount; ++i) {
                 int neighbor = neighbors[i];
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
-                    if (rear < vertexCount) {
-                        queue[rear++] = neighbor;  
+    
+                if (neighbor >= 0 && neighbor < vertixCount && !visited[neighbor]) {
+                    visited[neighbor] = true;               
+                    parent[neighbor] = current;           
+                    if (rear < vertixCount) {
+                        queue[rear++] = neighbor;         
+                        bfsGraph.addDirectedEdge(current, neighbor, g.getWeight(current, neighbor));  // Add the edge
                     } else {
                         std::cerr << "Queue overflow!" << std::endl;
-                        break;
                     }
-                    bfsGraph.addEdge(node, neighbor, g.getWeight(node, neighbor));
                 }
             }
-            delete[] neighbors;
+    
+            delete[] neighbors;  
         }
-        
+    
+
         delete[] visited;
+        delete[] parent;
         delete[] queue;
-        return bfsGraph;
+    
+        return bfsGraph;  
     }
     Graph Algorithms::dfs(Graph& g, int start) {
         int vertexCount = g.getVertexCount();
@@ -65,40 +75,64 @@ namespace graph {
         if (start < 0 || start >= vertexCount) {
             throw std::out_of_range("Invalid start vertex.");
         }
+    
         bool* visited = new bool[vertexCount]{false};
+        int* parent = new int[vertexCount];
         int* stack = new int[vertexCount];
         int top = -1;
-        Graph dfsGraph(vertexCount);
+    
+        for (int i = 0; i < vertexCount; ++i) {
+            parent[i] = -1;
+        }
+    
+        Graph dfsTree(vertexCount);
         stack[++top] = start;
-        visited[start] = true; 
+    
         while (top >= 0) {
-            int node = stack[top--]; 
+            int node = stack[top--];
+    
+            if (visited[node]) continue;
+    
+            visited[node] = true;
             std::cout << "Visiting node: " << node << std::endl;
-            int neighborCount = 0;
-            int* neighbors = g.getNeighbors(node, neighborCount); 
-            if (neighbors == nullptr) {
-                std::cerr << "Error: Neighbors are null for node " << node << std::endl;
-                break;
-            }
-            for (int i = 0; i < neighborCount; ++i) {
-                int neighbor = neighbors[i];
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
-                    if (top + 1 < vertexCount) {
-                        stack[++top] = neighbor; 
-                    } else {
-                        std::cerr << "Stack overflow!" << std::endl;
-                        break;
-                    }
-                    dfsGraph.addEdge(node, neighbor, g.getWeight(node, neighbor));
+    
+            if (parent[node] != -1) {
+                int weight = g.getWeight(parent[node], node);
+                if (weight != -1) {
+                    dfsTree.addEdge(parent[node], node, weight);
                 }
             }
+    
+            int neighborCount = 0;
+            int* neighbors = g.getNeighbors(node, neighborCount);
+            if (neighbors == nullptr) {
+                std::cerr << "Error: Neighbors are null for node " << node << std::endl;
+                delete[] visited;
+                delete[] stack;
+                delete[] parent;
+                return dfsTree;
+            }
+    
+            for (int i = 0; i < neighborCount; ++i) {
+                int neighbor = neighbors[i];
+    
+                if (neighbor == parent[node]) continue;
+    
+                if (!visited[neighbor]) {
+                    parent[neighbor] = node;
+                    stack[++top] = neighbor;
+                }
+            }
+    
             delete[] neighbors;
         }
+    
         delete[] visited;
         delete[] stack;
-        return dfsGraph;
+        delete[] parent;
+        return dfsTree;
     }
+    
 
     Graph Algorithms::dijkstra(Graph& g, int start) {
         int vertexCount = g.getVertexCount();

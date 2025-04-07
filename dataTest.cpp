@@ -78,3 +78,4 @@ TEST_CASE("UnionFind class functionality") {
     
     CHECK(uf.connected(0, 3) == false);
 }
+
