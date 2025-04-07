@@ -7,18 +7,18 @@
 
 TEST_CASE("Edge class functionality") {
     Edge e1(1, 2, 10);
-    
+ 
     CHECK(e1.getStart() == 1);
     CHECK(e1.getEnd() == 2);
     CHECK(e1.getWeight() == 10);
     
-    Edge e2 = e1; // Copy constructor
+    Edge e2 = e1; 
     CHECK(e2.getStart() == 1);
     CHECK(e2.getEnd() == 2);
     CHECK(e2.getWeight() == 10);
     
     Edge e3(3, 4, 5);
-    e3 = e1; // Assignment operator
+    e3 = e1; 
     CHECK(e3.getStart() == 1);
     CHECK(e3.getEnd() == 2);
     CHECK(e3.getWeight() == 10);
@@ -33,7 +33,7 @@ TEST_CASE("PriorityQueue class functionality") {
     pq.push(2, 3);
     pq.push(3, 8);
     
-    CHECK(pq.top() == 2);  // Highest priority
+    CHECK(pq.top() == 2);  
     pq.pop();
     CHECK(pq.top() == 1);
     pq.pop();

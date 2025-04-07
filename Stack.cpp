@@ -16,7 +16,6 @@ bool Stack::isEmpty() {
 
 void Stack::push(int value) {
     if (top == capacity - 1) {
-        // Stack overflow condition
         return;
     }
     data[++top] = value;
@@ -24,8 +23,7 @@ void Stack::push(int value) {
 
 int Stack::pop() {
     if (isEmpty()) {
-        // Stack underflow condition
-        return -1;  // Return an invalid value to indicate underflow
+        return -1;  
     }
     return data[top--];
 }

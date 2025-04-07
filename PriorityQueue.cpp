@@ -14,7 +14,6 @@ PriorityQueue::~PriorityQueue() {
 
 void PriorityQueue::heapifyUp(int index) {
     while (index > 0 && priorities[index] < priorities[(index - 1) / 2]) {
-        // Swap the data and priorities
         std::swap(data[index], data[(index - 1) / 2]);
         std::swap(priorities[index], priorities[(index - 1) / 2]);
         index = (index - 1) / 2;
@@ -50,12 +49,8 @@ void PriorityQueue::push(int value, int priority) {
         std::cerr << "PriorityQueue is full!" << std::endl;
         return;
     }
-
-    // Insert new value and priority at the end of the heap
     data[size] = value;
     priorities[size] = priority;
-
-    // Restore the heap property by moving the new element up
     heapifyUp(size);
     size++;
 }
@@ -65,13 +60,10 @@ void PriorityQueue::pop() {
         std::cerr << "PriorityQueue is empty!" << std::endl;
         return;
     }
-
-    // Move the last element to the root
     data[0] = data[size - 1];
     priorities[0] = priorities[size - 1];
     size--;
 
-    // Restore the heap property by moving the root element down
     heapifyDown(0);
 }
 
@@ -79,8 +71,7 @@ int PriorityQueue::top() const {
     if (isEmpty()) {
         throw std::underflow_error("PriorityQueue is empty!");
     }
-
-    return data[0]; // Return the element with the highest priority (root of the heap)
+    return data[0];
 }
 
 bool PriorityQueue::isEmpty() const {

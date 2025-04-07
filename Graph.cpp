@@ -1,72 +1,56 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "Graph.hpp"
 #include "Edge.hpp"
 
 namespace graph {
 
-    // Constructor: Initializes the graph with the given number of vertices
     Graph::Graph(int vertexCount) : vertexCount(vertexCount), edgeCount(0) {
         adjacencyList = new Edge*[vertexCount];
-
-        // Initialize each adjacency list as nullptr (empty list for each vertex)
         for (int i = 0; i < vertexCount; ++i) {
             adjacencyList[i] = nullptr;
         }
     }
+
     Graph::Graph(int vertexCount, int edgeCount) : vertexCount(vertexCount), edgeCount(edgeCount) {
         adjacencyList = new Edge*[vertexCount];
         for (int i = 0; i < vertexCount; ++i) {
             adjacencyList[i] = nullptr;
-        }//hu
+        }
     }
 
-    // Destructor: Cleans up the dynamically allocated memory
     Graph::~Graph() {
         for (int i = 0; i < vertexCount; ++i) {
             Edge* current = adjacencyList[i];
             while (current) {
                 Edge* nextEdge = current->getNext();
-                // We don't delete the nextEdge here since it is being managed elsewhere
+                delete current;  
                 current = nextEdge;
             }
         }
         delete[] adjacencyList; 
     }
-
-    // Adds an edge from 'start' to 'end' with the given 'weight'
+    
     void Graph::addEdge(int start, int end, int weight) {
         if (start >= vertexCount || end >= vertexCount || start < 0 || end < 0) {
             std::cerr << "Invalid node index!" << std::endl;
             return;
         }
-    
-        // Create a new edge for the adjacency list of the start node
-        Edge* forwardEdge = new Edge(start, end, weight);  // Pass start, end, and weight
+        Edge* forwardEdge = new Edge(start, end, weight);
         forwardEdge->setNext(adjacencyList[start]);
         adjacencyList[start] = forwardEdge;
-    
-        // Since this is an undirected graph, add the reverse edge as well
-        Edge* reverseEdge = new Edge(end, start, weight);  // Reverse edge with swapped start and end
+        Edge* reverseEdge = new Edge(end, start, weight);
         reverseEdge->setNext(adjacencyList[end]);
         adjacencyList[end] = reverseEdge;
-        
-
         ++edgeCount;
-        // delete[] forwardEdge;
-        // delete[] reverseEdge;
     }
 
-    // Retrieves the weight of an edge between two nodes
     int Graph::getWeight(int start, int end) const {
         if (start >= vertexCount || end >= vertexCount || start < 0 || end < 0) {
             std::cerr << "Invalid node index!" << std::endl;
             return -1;
         }
-    
-        // Traverse the adjacency list to find the edge
         Edge* current = adjacencyList[start];
         while (current) {
-            if (current->getEnd() == end) { // Use getter function for encapsulation
+            if (current->getEnd() == end) {
                 return current->getWeight();
             }
             current = current->getNext();
@@ -74,22 +58,16 @@ namespace graph {
     
         return -1;
     }
-
-    // Retrieves the neighbors of a node
     int* Graph::getNeighbors(int node, int& neighborCount) const {
         if (node >= vertexCount || node < 0) {
             std::cerr << "Invalid node index!" << std::endl;
-            neighborCount = 0;  // Make sure neighborCount is set to 0 on error
+            neighborCount = 0;
             return nullptr;
         }
-    
-        // Check if the adjacency list for the node is valid
         if (adjacencyList[node] == nullptr) {
-            neighborCount = 0;  // No neighbors if the list is empty
+            neighborCount = 0;
             return nullptr;
         }
-    
-        // Count the number of neighbors
         neighborCount = 0;
         Edge* current = adjacencyList[node];
         while (current != nullptr) {
@@ -97,89 +75,38 @@ namespace graph {
             current = current->getNext();
         }
     
-        // Allocate space for the neighbors
         int* neighbors = new int[neighborCount];
         if (neighbors == nullptr) {
-            std::cerr << "Memory allocation failed for neighbors array!" << std::endl;
-            neighborCount = 0;  // Ensure neighborCount is set to 0 on failure
+            std::cerr << "Memory allocation failed for neighbors array" << std::endl;
+            neighborCount = 0;
             return nullptr;
         }
     
-        // Fill the neighbors array with the neighbor node indices
         current = adjacencyList[node];
         int idx = 0;
         while (current != nullptr) {
-            neighbors[idx++] = current->getEnd();  // Get the destination of the edge
+            neighbors[idx++] = current->getEnd();
             current = current->getNext();
         }
-    
         return neighbors;
     }
-
-    // Returns the number of vertices
-    int Graph::getVertexCount() const {
+    int Graph::getVertexCount() const{
         return vertexCount;
     }
-
-    // Returns the number of edges
-    int Graph::getEdgeCount() const {
-        return edgeCount;
-    }
-
-    // Retrieves all edges of the graph (used in Kruskal's algorithm)
-    Edge** Graph::getEdges() const {
-        // Calculate the total number of edges in the graph (you might need to modify this logic)
-        int totalEdges = 0;
-        for (int i = 0; i < vertexCount; ++i) {
-            Edge* current = adjacencyList[i];
-            while (current) {
-                totalEdges++;
-                current = current->getNext();
-            }
-        }
-    
-        // Create an array of pointers to hold all edges
-        Edge** edges = new Edge*[totalEdges];
-        int index = 0;
-    
-        // Fill the edges array with all edges in the graph
-        for (int i = 0; i < vertexCount; ++i) {
-            Edge* current = adjacencyList[i];
-            while (current) {
-                edges[index++] = current;
-                current = current->getNext();
-            }
-        }
-    
-        return edges;
-    }
     int* Graph::getAdjacentVertices(int node) const {
-
         Edge* current = adjacencyList[node];
 
-        int* adj_array = new int[vertexCount];  // Dynamically allocate an array
-
+        int* adj_array = new int[vertexCount];
         int index = 0;
 
-
-
-        // Traverse the adjacency list for the vertex
-
         while (current != nullptr) {
-
             adj_array[index++] = current->getEnd();
-
             current = current->getNext();
-
         }
 
-
-
-        adj_array[index] = -1;  // Mark the end of the array
-
-        return adj_array;  // Return the array of adjacent verti
+        adj_array[index] = -1; 
+        return adj_array; 
     }
-    // Prints the graph (all edges with weights)
     void Graph::printGraph() const {
         for (int i = 0; i < vertexCount; ++i) {
             Edge* current = adjacencyList[i];
@@ -192,4 +119,4 @@ namespace graph {
         }
     }
 
-} // namespace graph
+} 

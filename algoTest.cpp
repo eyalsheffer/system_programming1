@@ -5,21 +5,21 @@
 using namespace graph;
 
 TEST_CASE("Graph basic operations") {
-    Graph g(4); // Create a graph with 4 nodes
+    Graph g(4); 
 
     SUBCASE("Vertex and edge count") {
         CHECK(g.getVertexCount() == 4);
         CHECK(g.getEdgeCount() == 0);
 
         g.addEdge(0, 1, 10);
-        CHECK(g.getEdgeCount() == 1); // Only increments once for undirected
+        CHECK(g.getEdgeCount() == 1); 
     }
 
     SUBCASE("Adding and getting edge weight") {
         g.addEdge(1, 2, 5);
         CHECK(g.getWeight(1, 2) == 5);
         CHECK(g.getWeight(2, 1) == 5);
-        CHECK(g.getWeight(0, 3) == -1); // Not connected
+        CHECK(g.getWeight(0, 3) == -1); 
     }
 
     SUBCASE("Neighbors retrieval") {
@@ -49,6 +49,6 @@ TEST_CASE("Graph basic operations") {
         g.addEdge(1, 3, 4);
         Edge** edges = g.getEdges();
         CHECK(edges != nullptr);
-        delete[] edges; // ONLY delete the array, not the edges themselves
+        delete[] edges;
     }
 }
